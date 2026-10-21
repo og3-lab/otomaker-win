@@ -41,13 +41,13 @@ Hugging Face のアカウントやトークンは不要です。モデルのリ�
    2. **Python 3.12 と依存パッケージ**: `uv sync --locked --extra tflite --no-dev` を実行します。Python は uv が管理するものを `runtime\python\` に入れます。
    3. **Stable Audio 3 のランタイム**: 動作を確認したコミット `77e0398` のアーカイブを GitHub からダウンロードし、SHA256 を照合して `stable-audio-3\optimized\tflite` に展開します。
    4. **モデル**: 取得するモデルを選びます（おすすめは `sfx` と `music`）。ファイルの一覧とライセンス条件が表示されるので、同意する場合は `y` を入力します。
-   5. **MCP の登録**: Claude Desktop（`%APPDATA%\Claude\claude_desktop_config.json`）と Claude Code（`claude mcp add --scope user`）に `otomaker` を登録するか、それぞれ Y/N で聞きます。Claude Desktop の設定ファイルは、変更前に `.bak-日時` の名前でバックアップを取り、`mcpServers` に `otomaker` を足すだけで、他の設定はそのまま残します。
-3. Claude を再起動します。Claude Desktop は、タスクトレイのアイコンから終了してから起動し直します。
+   5. **MCP の登録**: Claude Desktop（`%APPDATA%\Claude\claude_desktop_config.json`）と Claude Code（`claude mcp add --scope user`）に `otomaker` を登録するか、それぞれ Y/N で聞きます。Claude Desktop の設定ファイルは、変更前に `.bak-日時` の名前でバックアップを取り、`mcpServers` に `otomaker` を足すだけで、他の設定はそのまま残します。OpenAI Codex を使っている場合（`%USERPROFILE%\.codex\config.toml` かそのフォルダがある、または `codex` コマンドがある。`CODEX_HOME` があればそちら）は、`config.toml` に `[mcp_servers.otomaker]` を足すかも聞きます（生成に 30〜60 秒かかるため `tool_timeout_sec = 300`）。同じようにバックアップを取り、その節だけを足すか置き換えて、他の設定やコメントは残します。
+3. Claude（と Codex）を再起動します。Claude Desktop は、タスクトレイのアイコンから終了してから起動し直します。
 
 インストーラーは `PATH` やシステムの設定を変えません。uv・Python・パッケージのキャッシュはすべて OtoMaker フォルダの中（`runtime\`、`.venv\`、`stable-audio-3\`）に置きます。モデルファイルだけは Hugging Face のキャッシュに入ります（後述）。もう一度 `install.cmd` を実行すると、足りない部分だけを用意し直します。
 
 - **モデルを後から取得する:** `download-models.cmd` をダブルクリックします。取得していないモデルで生成すると、実行するコマンドを示して止まります。
-- **登録を外す:** `uninstall.cmd` をダブルクリックします。Claude Desktop と Claude Code から `otomaker` の登録を外します（それぞれ Y/N で確認）。フォルダとモデルは消さないので、不要なら表示された場所を手で削除します。生成した音声（`outputs\`）もフォルダの中にあります。
+- **登録を外す:** `uninstall.cmd` をダブルクリックします。Claude Desktop・Claude Code・Codex から `otomaker` の登録を外します（それぞれ Y/N で確認）。フォルダとモデルは消さないので、不要なら表示された場所を手で削除します。生成した音声（`outputs\`）もフォルダの中にあります。
 - **他のクライアント（Cursor など）:** MCP 設定の `"command"` に `<OtoMaker フォルダ>\.venv\Scripts\otomaker-mcp.exe` のフルパスを書きます。
 
 ## 手動でのセットアップ（CPU、sa3-tflite）

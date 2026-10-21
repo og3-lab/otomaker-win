@@ -41,13 +41,13 @@ You do not need a Hugging Face account or token. The model repositories are publ
    2. **Python 3.12 and the dependencies**: runs `uv sync --locked --extra tflite --no-dev`, with a uv-managed Python in `runtime\python\`.
    3. **The Stable Audio 3 runtime**: downloads the archive of the tested commit `77e0398` from GitHub, checks its SHA256 and extracts it to `stable-audio-3\optimized\tflite`.
    4. **Models**: you pick the models (`sfx` and `music` are recommended). The file list and the license terms are shown; type `y` to agree and download.
-   5. **MCP registration**: asks (Y/N each) whether to register `otomaker` with Claude Desktop (`%APPDATA%\Claude\claude_desktop_config.json`) and Claude Code (`claude mcp add --scope user`). The Claude Desktop config is backed up as `.bak-<date-time>` before the change; only `otomaker` is added under `mcpServers`, everything else stays as it was.
-3. Restart Claude. Quit Claude Desktop from its tray icon, then start it again.
+   5. **MCP registration**: asks (Y/N each) whether to register `otomaker` with Claude Desktop (`%APPDATA%\Claude\claude_desktop_config.json`) and Claude Code (`claude mcp add --scope user`). The Claude Desktop config is backed up as `.bak-<date-time>` before the change; only `otomaker` is added under `mcpServers`, everything else stays as it was. If you use OpenAI Codex (`%USERPROFILE%\.codex\config.toml` or that folder exists, or the `codex` command is found; `CODEX_HOME` is honored), it also asks whether to add `[mcp_servers.otomaker]` to `config.toml`, with `tool_timeout_sec = 300` because a generation takes 30-60 s. The file is backed up the same way, and only that table is added or replaced; other settings and comments stay.
+3. Restart Claude (and Codex). Quit Claude Desktop from its tray icon, then start it again.
 
 The installer does not change `PATH` or any system setting. uv, Python and the package cache all stay inside the OtoMaker folder (`runtime\`, `.venv\`, `stable-audio-3\`). Only the model files go to the Hugging Face cache (see below). Running `install.cmd` again sets up only what is missing.
 
 - **Get models later:** double-click `download-models.cmd`. Until a model is downloaded, a generation with it stops and names the command to run.
-- **Remove the registration:** double-click `uninstall.cmd`. It removes `otomaker` from Claude Desktop and Claude Code (Y/N each). It does not delete the folder or the models; delete the places it lists yourself if you no longer need them. Your generated audio (`outputs\`) is in the folder too.
+- **Remove the registration:** double-click `uninstall.cmd`. It removes `otomaker` from Claude Desktop, Claude Code and Codex (Y/N each). It does not delete the folder or the models; delete the places it lists yourself if you no longer need them. Your generated audio (`outputs\`) is in the folder too.
 - **Other clients (Cursor and others):** put the full path of `<OtoMaker folder>\.venv\Scripts\otomaker-mcp.exe` as `"command"` in their MCP config.
 
 ## Manual setup (CPU, sa3-tflite)

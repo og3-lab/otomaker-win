@@ -72,6 +72,24 @@ claude mcp add --scope user otomaker -- "C:\Users\<name>\.local\bin\uvx.exe" --f
 }
 ```
 
+**OpenAI Codex:** register it with `codex mcp add`, then set the timeouts in `%USERPROFILE%\.codex\config.toml` (or `%CODEX_HOME%\config.toml`). `codex mcp add` has no timeout option, and a generation takes 30-60 s, which the default tool timeout (60 s) does not safely cover.
+
+```powershell
+codex mcp add otomaker -- "C:\Users\<name>\.local\bin\uvx.exe" --from "SRC" otomaker-mcp
+```
+
+Then add the two timeout lines to the `[mcp_servers.otomaker]` table it wrote. Or edit `config.toml` by hand: back it up first, then add only this table and keep every other line and comment as it is:
+
+```toml
+[mcp_servers.otomaker]
+command = 'C:\Users\<name>\.local\bin\uvx.exe'
+args = ["--from", "SRC", "otomaker-mcp"]
+startup_timeout_sec = 60
+tool_timeout_sec = 300
+```
+
+ChatGPT on the web cannot use an MCP server that runs on this PC. Use Codex (CLI or app) instead.
+
 Other MCP clients take the same `command` and `args`.
 
 ## 6. Restart the client
@@ -79,11 +97,13 @@ Other MCP clients take the same `command` and `args`.
 Tell the user to restart the MCP client:
 
 - **Claude Code:** start a new session.
+- **Codex:** start a new session.
 - **Claude Desktop:** quit it from the tray icon, then start it again. Closing the window does not quit it.
 
 ## 7. Check that it works
 
 - **Claude Code:** `claude mcp list` should show `otomaker` as connected.
+- **Codex:** `codex mcp list` should show `otomaker`.
 - After the restart, ask for a short test: "Generate a 2-second sound effect of a knock on a wooden door." A WAV path under `%LOCALAPPDATA%\OtoMaker\outputs\` should come back. The first generation also loads the model, so it takes longer than later ones.
 - If a tool returns an error, it says what to run next, for example an `otomaker-download` command for a missing model. Get the user's consent again (step 3) before you download more models.
 
@@ -91,4 +111,4 @@ Tell the user to restart the MCP client:
 
 - **Data folder:** `%LOCALAPPDATA%\OtoMaker` holds `stable-audio-3\` (the runtime and the model links) and `outputs\`. Set `OTOMAKER_HOME` to use another folder. If you set it, set the same value for `otomaker-download` and in the MCP registration (`claude mcp add -e OTOMAKER_HOME=...`). Folder names with non-ASCII characters (a Japanese user name, for example) are fine.
 - **Settings:** see the environment variable table in [README.md](README.md), for example `OTOMAKER_SA3_MODEL=sm-sfx` to make the sound-effect model the default.
-- **Uninstall:** run `claude mcp remove --scope user otomaker`, or remove the `otomaker` entry from the Claude Desktop config. Then delete `%LOCALAPPDATA%\OtoMaker`, and the folder `models--stabilityai--stable-audio-3-optimized` under `%USERPROFILE%\.cache\huggingface\hub`.
+- **Uninstall:** run `claude mcp remove --scope user otomaker`, or remove the `otomaker` entry from the Claude Desktop config. For Codex, run `codex mcp remove otomaker`, or delete the `[mcp_servers.otomaker]` table from `config.toml`. Then delete `%LOCALAPPDATA%\OtoMaker`, and the folder `models--stabilityai--stable-audio-3-optimized` under `%USERPROFILE%\.cache\huggingface\hub`.

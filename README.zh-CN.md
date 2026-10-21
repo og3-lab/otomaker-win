@@ -41,13 +41,13 @@
    2. **Python 3.12 和依赖**：运行 `uv sync --locked --extra tflite --no-dev`，使用 uv 管理的 Python（放在 `runtime\python\`）。
    3. **Stable Audio 3 运行时**：从 GitHub 下载已验证的提交 `77e0398` 的归档，校验 SHA256 后解压到 `stable-audio-3\optimized\tflite`。
    4. **模型**：选择要下载的模型（推荐 `sfx` 和 `music`）。会显示文件列表和许可条款，同意时输入 `y`。
-   5. **注册 MCP**：分别询问（Y/N）是否在 Claude Desktop（`%APPDATA%\Claude\claude_desktop_config.json`）和 Claude Code（`claude mcp add --scope user`）中注册 `otomaker`。修改前会将 Claude Desktop 的配置文件备份为 `.bak-日期时间`，只在 `mcpServers` 中添加 `otomaker`，其他设置保持不变。
-3. 重启 Claude。Claude Desktop 请从任务栏托盘图标退出后再重新启动。
+   5. **注册 MCP**：分别询问（Y/N）是否在 Claude Desktop（`%APPDATA%\Claude\claude_desktop_config.json`）和 Claude Code（`claude mcp add --scope user`）中注册 `otomaker`。修改前会将 Claude Desktop 的配置文件备份为 `.bak-日期时间`，只在 `mcpServers` 中添加 `otomaker`，其他设置保持不变。如果你使用 OpenAI Codex（存在 `%USERPROFILE%\.codex\config.toml` 或该文件夹，或能找到 `codex` 命令；设置了 `CODEX_HOME` 时以其为准），还会询问是否在 `config.toml` 中添加 `[mcp_servers.otomaker]`（生成需要 30-60 秒，因此设为 `tool_timeout_sec = 300`）。同样会先备份，只添加或替换这一节，其他设置和注释保持不变。
+3. 重启 Claude（和 Codex）。Claude Desktop 请从任务栏托盘图标退出后再重新启动。
 
 安装程序不会修改 `PATH` 或任何系统设置。uv、Python 和软件包缓存都放在 OtoMaker 文件夹内（`runtime\`、`.venv\`、`stable-audio-3\`）。只有模型文件放在 Hugging Face 缓存中（见下文）。再次运行 `install.cmd` 只会补齐缺少的部分。
 
 - **之后再下载模型：** 双击 `download-models.cmd`。模型下载之前，用它生成会停止并提示要运行的命令。
-- **取消注册：** 双击 `uninstall.cmd`。它会从 Claude Desktop 和 Claude Code 中移除 `otomaker`（分别以 Y/N 确认）。不会删除文件夹和模型；不再需要时请手动删除它列出的位置。生成的音频（`outputs\`）也在该文件夹中。
+- **取消注册：** 双击 `uninstall.cmd`。它会从 Claude Desktop、Claude Code 和 Codex 中移除 `otomaker`（分别以 Y/N 确认）。不会删除文件夹和模型；不再需要时请手动删除它列出的位置。生成的音频（`outputs\`）也在该文件夹中。
 - **其他客户端（Cursor 等）：** 在其 MCP 配置的 `"command"` 中填写 `<OtoMaker 文件夹>\.venv\Scripts\otomaker-mcp.exe` 的完整路径。
 
 ## 手动安装（CPU，sa3-tflite）

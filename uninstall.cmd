@@ -1,6 +1,6 @@
 @echo off
 setlocal
-rem Remove the otomaker registration from Claude Desktop / Claude Code. Files are not deleted.
+rem Remove the otomaker registration from Claude Desktop / Claude Code / OpenAI Codex. Files are not deleted.
 if not exist "%~dp0installer\uninstall.ps1" (
   echo Extract the whole zip first, then run uninstall.cmd in the extracted folder.
   pause

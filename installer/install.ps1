@@ -8,7 +8,8 @@
     2. Python 3.12 と依存   uv sync --locked --extra tflite --no-dev（uv が管理する Python を runtime\python\ に）
     3. Stable Audio 3 のランタイム   上流コミット固定のアーカイブ（SHA256 照合）から stable-audio-3\optimized\tflite\ を展開
     4. モデル    otomaker-download を対話で起動（ライセンスの同意はそこで求める）
-    5. MCP 登録  Claude Desktop と Claude Code に otomaker を登録（それぞれ Y/N で確認）
+    5. MCP 登録  Claude Desktop と Claude Code に otomaker を登録（それぞれ Y/N で確認）。
+                 OpenAI Codex を使っている場合（config.toml か設定フォルダか codex コマンドがある）は Codex にも登録
 
 .PARAMETER SkipModels
   モデルの取得を飛ばす（後で download-models.cmd で取得できる）。
@@ -18,6 +19,8 @@
   Claude Desktop の設定ファイル。既定は %APPDATA%\Claude\claude_desktop_config.json。
 .PARAMETER ClaudeCodeConfigDir
   Claude Code の設定フォルダ（CLAUDE_CONFIG_DIR としてこの処理の中だけで渡す）。既定は Claude Code 自体の既定。
+.PARAMETER CodexHome
+  Codex の設定フォルダ（CODEX_HOME としてこの処理の中だけで渡す）。既定は CODEX_HOME、無ければ %USERPROFILE%\.codex。
 .PARAMETER NoRegister
   MCP の登録を飛ばす。
 .PARAMETER Yes
@@ -28,6 +31,7 @@ param(
     [switch]$NoPathUv,
     [string]$DesktopConfig = "",
     [string]$ClaudeCodeConfigDir = "",
+    [string]$CodexHome = "",
     [switch]$NoRegister,
     [switch]$Yes
 )
@@ -201,6 +205,38 @@ function Register-ClaudeCode {
     return $true
 }
 
+# OpenAI Codex: only when Codex is used here. config.toml is edited as text (only [mcp_servers.otomaker]).
+function Register-Codex {
+    $d = Invoke-Captured $VenvPython @("-I", "-m", "otomaker.codex_config", "detect")
+    if ($d.Code -eq 2) {
+        Write-Info "OpenAI Codex は見つからないため、登録しません。"
+        return $false
+    }
+    if ($d.Code -ne 0) { Write-Err2 "Codex の確認に失敗しました（終了コード $($d.Code)）。"; $d.Lines | ForEach-Object { Write-Info $_ }; return $false }
+    $cfg = $d.Lines[0]
+    Write-Info "設定ファイル: $cfg"
+    $manual = @(
+        "[mcp_servers.otomaker]",
+        ('command = "' + ($McpExe -replace '\\', '\\') + '"'),
+        "args = []",
+        "startup_timeout_sec = 60",
+        "tool_timeout_sec = 300"
+    )
+    if (-not (Read-YesNo "OpenAI Codex に otomaker を登録しますか？（同名の登録は置き換えます） (Register in Codex?)" $true)) {
+        Write-Info "Codex への登録を飛ばしました。"
+        return $false
+    }
+    $r = Invoke-Captured $VenvPython @("-I", "-m", "otomaker.codex_config", "add", "--command", $McpExe)
+    $r.Lines | ForEach-Object { Write-Info $_ }
+    if ($r.Code -ne 0) {
+        Write-Err2 "Codex の設定を変更できませんでした（終了コード $($r.Code)）。手で次を $cfg に追加してください:"
+        $manual | ForEach-Object { Write-Info "  $_" }
+        return $false
+    }
+    Write-Ok "Codex に登録しました。"
+    return $true
+}
+
 try {
     Write-Host "OtoMaker for Windows インストーラー" -ForegroundColor Cyan
     Write-Host "インストール先 (folder): $Root"
@@ -254,6 +290,12 @@ try {
         }
         if (Register-Desktop) { $registered += "Claude Desktop" }
         if (Register-ClaudeCode) { $registered += "Claude Code" }
+        if ($CodexHome) {
+            New-Item -ItemType Directory -Force -Path $CodexHome | Out-Null
+            $env:CODEX_HOME = (Resolve-Path -LiteralPath $CodexHome).Path
+            Write-Info "Codex の設定フォルダ: $env:CODEX_HOME (-CodexHome)"
+        }
+        if (Register-Codex) { $registered += "Codex" }
     }
     Write-Info "他のクライアント（Cursor など）では、MCP 設定の command に次を書きます:"
     Write-Info "  $McpExe"
@@ -262,8 +304,8 @@ try {
     Write-Host "インストールが終わりました。(Done.)" -ForegroundColor Green
     if ($registered.Count) {
         Write-Host ("登録先: " + ($registered -join "、"))
-        Write-Host "Claude を再起動してください。Claude Desktop はタスクトレイのアイコンから「終了」してから起動し直します。" -ForegroundColor Yellow
-        Write-Host "(Restart Claude so it picks up the otomaker server.)"
+        Write-Host "Claude（と Codex）を再起動してください。Claude Desktop はタスクトレイのアイコンから「終了」してから起動し直します。" -ForegroundColor Yellow
+        Write-Host "(Restart Claude / Codex so it picks up the otomaker server.)"
     }
     exit 0
 } catch {
