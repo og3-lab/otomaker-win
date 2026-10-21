@@ -1,0 +1,48 @@
+[project]
+name = "otomaker"
+version = "0.1.0"
+description = "OtoMaker: local AI BGM and sound-effect generation (Stable Audio 3) as an MCP server, for Windows"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "OG-3" }]
+requires-python = ">=3.10,<3.13"
+keywords = ["mcp", "stable-audio", "audio-generation", "sound-effects", "bgm"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: Microsoft :: Windows",
+    "Topic :: Multimedia :: Sound/Audio",
+]
+dependencies = [
+    "mcp>=2.3,<3",
+    "numpy>=1.24",
+    "pydantic>=2",
+    "soundfile>=0.12",
+]
+
+[project.optional-dependencies]
+# Stable Audio 3 on the CPU via the official TFLite / LiteRT runtime (the default
+# backend). The runtime itself is a stable-audio-3 checkout, see OTOMAKER_SA3_TFLITE_DIR.
+tflite = [
+    "ai-edge-litert>=2.2.0",
+    "sentencepiece>=0.2",
+    "huggingface_hub>=0.20",
+    "psutil>=5.9",   # physical core count for the default thread count
+]
+
+[project.scripts]
+otomaker-mcp = "otomaker.server:main"
+otomaker-download = "otomaker.download:_entry"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/otomaker"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

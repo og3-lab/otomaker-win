@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Generated audio
+outputs/
+*.wav
+*.ogg
+*.flac
+*.mp3
+
+# Local config / tooling
+.env
+.env.*
+.claude/
+.idea/
+.vscode/
+
+# Generated audio, run logs and listening specs (kept on disk, not tracked)
+out/
+runs/
+listen/spec/
+
+# Upstream runtime cloned into the OtoMaker folder (default OTOMAKER_SA3_TFLITE_DIR)
+stable-audio-3/
+
+# Installer: uv, uv-managed Python and caches inside the OtoMaker folder
+runtime/
+stable-audio-3.partial/

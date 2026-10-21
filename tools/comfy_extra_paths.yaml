@@ -1,0 +1,19 @@
+#Example entry for the sa3-comfy backend. Do not pass this file as is: copy the
+#"otomaker:" block below into the extra_model_paths.yaml of YOUR ComfyUI
+#(next to ComfyUI's main.py; if it does not exist, copy
+#extra_model_paths.yaml.example to extra_model_paths.yaml first), change
+#base_path to the folder that holds your files, and restart ComfyUI.
+#
+#Not needed if the files are already in ComfyUI's own models\checkpoints and
+#models\text_encoders folders.
+#
+#Files (otomaker-download <model> --comfy --comfy-dir <base_path> puts them here):
+#  checkpoints\    stable_audio_3_small_sfx / _small_music / _medium .safetensors
+#  text_encoders\  t5gemma_b_b_ul2.safetensors (CLIPLoader type "stable_audio")
+#
+#Use forward slashes or doubled backslashes in paths.
+
+otomaker:
+    base_path: D:/models/stable-audio-3/
+    checkpoints: checkpoints/
+    text_encoders: text_encoders/

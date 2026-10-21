@@ -1,0 +1,61 @@
+OtoMaker for Windows
+Copyright (c) 2026 kanaworksai-hue
+Copyright (c) 2026 OG-3
+
+OtoMaker for Windows is licensed under the MIT License (see LICENSE).
+
+This package contains no model weights and no Stable Audio 3 code. The
+components below are obtained separately by the user (with otomaker-download,
+git clone or on first use) and are governed by their own terms.
+
+--------------------------------------------------------------------------
+1. Stable Audio 3 model weights (Stability AI)
+--------------------------------------------------------------------------
+Downloaded from Hugging Face (stabilityai/stable-audio-3-optimized for the CPU
+backend, Comfy-Org/stable-audio-3 for the ComfyUI backend).
+
+License: Stability AI Community License
+https://stability.ai/community-license-agreement
+
+Free for research, non-commercial use and commercial use by individuals and
+organisations with less than US$1M in total annual revenue. Organisations at
+or above US$1M in annual revenue need an Enterprise License from Stability AI.
+Read the license itself before commercial use; this summary is not a
+substitute for it.
+
+This Stability AI Model is licensed under the Stability AI Community License, Copyright © Stability AI Ltd. All Rights Reserved.
+
+Powered by Stability AI
+
+--------------------------------------------------------------------------
+2. T5Gemma text encoder (Google)
+--------------------------------------------------------------------------
+The text encoder used by Stable Audio 3 (t5gemma) is derived from Gemma.
+
+License: Gemma Terms of Use
+https://ai.google.dev/gemma/terms
+(including the Gemma Prohibited Use Policy,
+https://ai.google.dev/gemma/prohibited_use_policy)
+
+--------------------------------------------------------------------------
+3. Stable Audio 3 runtime code (Stability-AI/stable-audio-3)
+--------------------------------------------------------------------------
+https://github.com/Stability-AI/stable-audio-3
+Not included in this package. The user clones it (verified with commit
+77e0398) and OtoMaker imports it at run time.
+
+MIT License
+Copyright (c) 2026 Stability AI
+
+--------------------------------------------------------------------------
+4. Original code (kanaworksai-hue/audio-studio-mcp)
+--------------------------------------------------------------------------
+OtoMaker for Windows is derived from
+https://github.com/kanaworksai-hue/audio-studio-mcp
+
+MIT License
+Copyright (c) 2026 kanaworksai-hue
+
+--------------------------------------------------------------------------
+OtoMaker for Windows is an independent project. It is not affiliated with or
+endorsed by Stability AI, Google or Anthropic.
