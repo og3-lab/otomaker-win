@@ -1,6 +1,6 @@
 [project]
 name = "otomaker"
-version = "0.1.0"
+version = "0.1.1"
 description = "OtoMaker: local AI BGM and sound-effect generation (Stable Audio 3) as an MCP server, for Windows"
 readme = "README.md"
 license = "MIT"
